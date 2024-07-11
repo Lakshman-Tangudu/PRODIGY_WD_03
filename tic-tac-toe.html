@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Tic-Tac-Toe</title>
+    <style>
+
+        body{
+            background-color: black;
+            font-family:cursive;
+            color: yellow;
+        }
+        .game-container{
+            text-align: center;
+            display: grid;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 150px;
+        }
+
+        .header{
+            font-size: 45px;
+            margin-bottom: 30px;
+        }
+
+        .cell-container{
+            display: grid;
+            grid-template-columns: repeat(3,auto);
+            width: 225px;
+            margin: auto;
+        }
+
+        .cell{
+            border-left: 4px solid yellow;
+            border-right: 4px solid yellow;
+            border-bottom: 4px solid yellow;
+            width: 75px;
+            height: 75px;
+            font-size: 50px;
+            align-content: center;
+            cursor: pointer;
+            border-left:none;
+        }
+
+        .Restart{
+            width: 120px;
+            height: 45px;
+            font-size: larger;
+            font-family: cursive;
+            background-color: yellow;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            Tic-Tac-Toe
+        </div>
+        <div class="cell-container">
+            <div class="cell" cellIndex="0"></div>
+            <div class="cell" cellIndex="1"></div>
+            <div class="cell" style="border-right: none;" cellIndex="2"></div>
+            <div class="cell" cellIndex="3"></div>
+            <div class="cell" cellIndex="4"></div>
+            <div class="cell" style="border-right: none;" cellIndex="5"></div>
+            <div class="cell" style="border-bottom: none;"  cellIndex="6"></div>
+            <div class="cell" style="border-bottom: none;"  cellIndex="7"></div>
+            <div class="cell" style="border-bottom: none; border-right: none;" cellIndex="8"></div>
+        </div>
+        <h2 id="status">
+
+        </h2>
+        <div>
+            <button class="Restart">Restart</button>
+
+        </div>
+    </div>
+
+    <script>
+
+        const cell=document.querySelectorAll(".cell");
+        console.log((cell));
+        const status=document.querySelector("#status");
+        const Restart_button=document.querySelector(".Restart");
+        const wins=[
+            [0,1,2],
+            [3,4,5],
+            [6,7,8],
+            [0,3,6],
+            [1,4,7],
+            [2,5,8],
+            [0,4,8],
+            [2,4,6]
+        ];
+        
+        let options=["","","","","","","","",""];
+        let currentPlayer="X";
+        let running=false;
+
+        initial();
+
+        function initial(){
+            running=true;
+            cell.forEach(cell=>{
+                cell.addEventListener("click",cellclicked)
+            });
+            Restart_button.addEventListener("click",Restart);
+            status.innerHTML=`${currentPlayer}'s turn`;
+        }
+
+        function cellclicked(){
+            const cellIndex=this.getAttribute("cellIndex");
+            
+            if(options[cellIndex] !== "" || !running){
+                return;
+            }
+
+            update(this,cellIndex);
+            win();
+        }
+
+        function update(cell,cellIndex){
+            options[cellIndex]=currentPlayer;
+            cell.textContent=currentPlayer; 
+        }
+
+        function changePlayer(){
+            currentPlayer=(currentPlayer=="X")? "O": "X";
+            status.textContent=`${currentPlayer}'s turn`;
+        }
+
+        function Restart(){
+            options=["","","","","","","","",""];
+            currentPlayer="X";
+            status.textContent=`${currentPlayer}'s turn`;
+            cell.forEach( cell => cell.textContent=""); 
+            running=true;
+        }
+
+        function win(){
+
+            let winner=false;
+            for(let i=0;i<wins.length;i++){
+                const cell=wins[i];
+                const cellA=options[cell[0]];
+                const cellB=options[cell[1]];
+                const cellC=options[cell[2]];
+
+                if(cellA === "" || cellB === "" || cellC ===""){
+                    continue;
+                }else if(cellA === cellB && cellB === cellC){
+                    winner=true;
+                    break;
+               }
+            }
+            if(winner){
+                status.textContent=`${currentPlayer} wins!`;
+                running=false;
+            }else if(!options.includes("")){
+                status.textContent=`Draw!`;
+                running=false;
+            }else{
+                changePlayer();
+            }
+    }
+
+    </script>
+</body>
+</html>
